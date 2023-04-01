@@ -1,9 +1,14 @@
-# Warning 
+# Warning ⚠️
 
 Please make repo private before adding config like BOT_TOKEN,  TELEGRAM_API,  TELEGRAM_HASH,  DATABASE_URL 
 Otherwise your bot , group or channel will hack.
 
-# SN_WZML
+# How to deploy. 
+
+Rename sample_config.env to config.env and fill required env
+In github secret add HEROKU_API_KEY, HEROKU_EMAIL,  HEROKU_APP_NAME
+
+# SN_WZML.
 
 Support Group: https://t.me/AtrociousBotSupport
 
