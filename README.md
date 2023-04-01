@@ -9,7 +9,9 @@ Rename sample_config.env to config.env and fill required env
 In github secret add three secrets. 
 
 HEROKU_API_KEY
+
 HEROKU_EMAIL
+
 HEROKU_APP_NAME
 
 
