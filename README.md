@@ -1,3 +1,6 @@
+[![hi](https://github-readme-stats.vercel.app/api/pin/?username=SN-Abdullah-Al-Noman&repo=SN_WZML&theme=react&border_color=61dafb&border_radius=10)](https://github.com/SN-Abdullah-Al-Noman/SN_WZML)
+
+
 # Warning ⚠️
 
 Please make repo private before adding config like BOT_TOKEN,  TELEGRAM_API,  TELEGRAM_HASH,  DATABASE_URL 
