@@ -7,28 +7,30 @@ from datetime import datetime
 from pickle import load as pload
 from base64 import urlsafe_b64decode
 from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
 from telegram.ext import CommandHandler, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from bot import bot, dispatcher, updater, OWNER_ID
 
-SCOPES = ["https://mail.google.com/"]
+SCOPES = ["https://mail.google.com/", "https://www.googleapis.com/auth/drive"]
 
 if ospath.exists('token.pickle'):
     with open('token.pickle', 'rb') as token:
-        credentials = pload(token)
-        if not credentials or not credentials.valid:
-            raise Exception("Invalid or missing credentials")
-        elif not all(scope in credentials.scopes for scope in SCOPES):
-            raise Exception("Missing required Gmail API scopes in credentials")
+        creds = pload(token)
+
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
 else:
-    credentials = None
+    flow = InstalledAppFlow.from_client_secrets_file(
+        'credentials.json', SCOPES)
+    creds = flow.run_local_server(port=0)
 
-if 'https://mail.google.com/' not in credentials.scopes:
-    print('Gmail API not enabled in token.pickle. Exiting...')
-    exit()
+    with open('token.pickle', 'rb') as token:
+        creds = pload(token)
 
-service = build('gmail', 'v1', credentials)
+service = build('gmail', 'v1', credentials=creds)
 
 def fetch_unread_messages():
     query = 'is:unread from:(drivesafety-noreply@google.com)'
