@@ -229,14 +229,16 @@ def timeformatter(milliseconds: int) -> str:
         ((str(milliseconds) + " millisec, ") if milliseconds else "")
     return tmp[:-2]
 
-def get_progress_bar_string(pct):
-    pct = float(pct.strip('%'))
-    p = min(max(pct, 0), 100)
-    cFull = int(p / 10)
-    cIncomplete = int(round(p / 10 - cFull))
+def get_progress_bar_string(status):
+    completed = status.processed_bytes() / 10
+    total = status.size_raw() / 10
+    p = 0 if total == 0 else round(completed * 100 / total)
+    p = min(max(p, 0), 100)
+    cFull = p // 10
+    cPart = p % 10 - 1
     p_str = config_dict['FINISHED_PROGRESS_STR'] * cFull
-    p_str += config_dict['UN_FINISHED_PROGRESS_STR']  * (10 - len(p_str))
-    return f"{p_str}"
+    p_str += config_dict['UN_FINISHED_PROGRESS_STR']  * (10 - cFull)
+    return f"[{p_str}]"
 
 def get_readable_message():
     with download_dict_lock:
@@ -256,14 +258,14 @@ def get_readable_message():
                 msg += f"<code>{escape(str(download.name()))}</code>"
             if download.status() not in [MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_CONVERTING, MirrorStatus.STATUS_QUEUEDL, MirrorStatus.STATUS_QUEUEUP]:
                 if config_dict['EMOJI_THEME']:
-                    msg += f"\n<b><a href='https://github.com/SN-Abdullah-Al-Noman/SN_WZML'>{get_progress_bar_string(download.progress())}</a></b> {download.progress()}"
+                    msg += f"\n<b></b>{get_progress_bar_string(download)} {download.progress()}"
                     msg += f"\n<b>🔄 Done:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                     msg += f"\n<b>⚡ Speed:</b> {download.speed()}"
                     msg += f"\n<b>⏳ ETA:</b> {download.eta()}"
                     msg += f"<b> | Elapsed: </b>{get_readable_time(time() - download.message.date.timestamp())}"
                     msg += f"\n<b>⛓️ Engine:</b> {download.eng()}"
                 else:
-                    msg += f"\n<b><a href='https://github.com/SN-Abdullah-Al-Noman/SN_WZML'>{get_progress_bar_string(download.progress())}</a></b> {download.progress()}"
+                    msg += f"\n<b></b>{get_progress_bar_string(download)} {download.progress()}"
                     msg += f"\n<b>Done:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                     msg += f"\n<b>Speed:</b> {download.speed()}"
                     msg += f"\n<b>ETA:</b> {download.eta()}"
@@ -361,18 +363,16 @@ def get_readable_message():
             bmsg += f"<b>🖥 CPU:</b> {cpu_percent()}% | <b>💿 FREE:</b> {get_readable_file_size(disk_usage(DOWNLOAD_DIR).free)}"
             bmsg += f"\n<b>🎮 RAM:</b> {virtual_memory().percent}% | <b>🟢 UPTIME:</b> {get_readable_time(time() - botStartTime)}"
             bmsg += f"\n<b>🔽 DL:</b> {get_readable_file_size(dl_speed)}/s | <b>🔼 UL:</b> {get_readable_file_size(up_speed)}/s\n\n"
-            bmsg += f"<b>‎‎<a href='https://github.com/SN-Abdullah-Al-Noman/SN_WZML'>Powered By Sn Wzml</a></b>\n"
-
         else:
             bmsg = f"{TASKS_COUNT}"
             bmsg += f"<b>CPU:</b> {cpu_percent()}% | <b>FREE:</b> {get_readable_file_size(disk_usage(DOWNLOAD_DIR).free)}"
             bmsg += f"\n<b>RAM:</b> {virtual_memory().percent}% | <b>UPTIME:</b> {get_readable_time(time() - botStartTime)}"
             bmsg += f"\n<b>DL:</b> {get_readable_file_size(dl_speed)}/s | <b>UL:</b> {get_readable_file_size(up_speed)}/s\n\n"
-            bmsg += f"<b>‎‎<a href='https://github.com/SN-Abdullah-Al-Noman/SN_WZML'>Powered By Sn Wzml</a></b>\n\n"
 
         buttons = ButtonMaker()
         buttons.sbutton("Refresh", "status refresh")
         buttons.sbutton("Statistics", str(THREE))
+        buttons.buildbutton(f"Repo", f"https://github.com/SN-Abdullah-Al-Noman/SN_WZML")
         buttons.sbutton("Close", "status close")
         sbutton = buttons.build_menu(3)
         
@@ -382,12 +382,14 @@ def get_readable_message():
             buttons.sbutton(f"{PAGE_NO}/{PAGES}", str(THREE))
             buttons.sbutton("Next⏩", "status nex")
             buttons.sbutton("Refresh", "status refresh")
+            buttons.buildbutton(f"Repo", f"https://github.com/SN-Abdullah-Al-Noman/SN_WZML")
             buttons.sbutton("Close", "status close")
         else:
             buttons.sbutton("Previous", "status pre")
             buttons.sbutton(f"{PAGE_NO}/{PAGES}", str(THREE))
             buttons.sbutton("Next", "status nex")
             buttons.sbutton("Refresh", "status refresh")
+            buttons.buildbutton(f"Repo", f"https://github.com/SN-Abdullah-Al-Noman/SN_WZML")
             buttons.sbutton("Close", "status close")
             button = buttons.build_menu(3)
             return msg + bmsg, button
