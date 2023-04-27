@@ -20,6 +20,8 @@ if ospath.exists('token.pickle'):
 
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
+else:
+    return
 
 try:
     service = build('gmail', 'v1', credentials=creds)
