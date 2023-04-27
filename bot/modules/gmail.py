@@ -17,7 +17,6 @@ from bot import bot, dispatcher, updater, OWNER_ID
 if ospath.exists('token.pickle'):
     with open('token.pickle', 'rb') as token:
         creds = pload(token)
-
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
 else:
