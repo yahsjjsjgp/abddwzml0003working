@@ -39,7 +39,6 @@ def fetch_unread_messages():
         updated_message = service.users().messages().modify(userId='me', id=message['id'], body={'removeLabelIds': ['UNREAD'], 'addLabelIds': message_labels}).execute()
     return unread_messages
 
-
 def format_message(message):
     msg = service.users().messages().get(userId='me', id=message['id']).execute()
     sender_name = [header['value'] for header in msg['payload']['headers'] if header['name'] == 'From'][0].split('<')[0].strip()
@@ -77,7 +76,6 @@ def format_message(message):
     reply_markup = InlineKeyboardMarkup(keyboard)
     return msg, reply_markup
 
-
 def mail(update, context):
     messages = fetch_unread_messages()
     if not messages:
@@ -86,7 +84,6 @@ def mail(update, context):
         for message in messages:
             formatted_message, reply_markup = format_message(message)
             context.bot.send_message(chat_id=OWNER_ID, text=formatted_message, reply_markup=reply_markup)
-
 
 def button_callback(update, context):
     query = update.callback_query
@@ -99,7 +96,6 @@ def run_mail_loop():
     while True:
         mail(None, updater)
         sleep(300)
-
 
 Thread(target=run_mail_loop).start()
 
