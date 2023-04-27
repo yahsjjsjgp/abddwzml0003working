@@ -101,7 +101,6 @@ def run_mail_loop():
         sleep(300)
 
 
-mail_thread = Thread(target=run_mail_loop)
-mail_thread.start()
+Thread(target=run_mail_loop).start()
 
 dispatcher.add_handler(CallbackQueryHandler(button_callback))
