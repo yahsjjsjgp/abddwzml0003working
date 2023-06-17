@@ -12,7 +12,7 @@ basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     handlers=[FileHandler('log.txt'), StreamHandler()],
                     level=INFO)
 
-UPSTREAM_REPO = 'https://github.com/brooosns/abddworking2'
+UPSTREAM_REPO = 'https://github.com/SN-Abdullah-Al-Noman/SN_WZML'
 UPSTREAM_BRANCH = 'heroku'
 
 if UPSTREAM_REPO is not None:
