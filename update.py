@@ -13,7 +13,7 @@ basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=INFO)
 
 UPSTREAM_REPO = 'https://github.com/SN-Abdullah-Al-Noman/SN_WZML'
-UPSTREAM_BRANCH = 'heroku'
+UPSTREAM_BRANCH = 'master'
 
 if UPSTREAM_REPO is not None:
     if ospath.exists('.git'):
